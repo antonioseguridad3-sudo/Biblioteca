@@ -1,0 +1,229 @@
+version: 2
+
+models:
+  - name: stg_clientes
+    description: "Modelo staging de clientes"
+    columns:
+      - name: idcliente
+        description: "Identificador único del cliente"
+        tests:
+          - not_null
+          - unique
+
+      - name: nombre
+        description: "Nombre del cliente"
+
+      - name: telefono
+        description: "Teléfono del cliente"
+
+      - name: email
+        description: "Correo electrónico del cliente"
+
+      - name: direccion
+        description: "Dirección del cliente"
+
+      - name: ciudad
+        description: "Ciudad del cliente"
+
+      - name: fnacimiento
+        description: "Fecha de nacimiento"
+
+      - name: falta
+        description: "Fecha de alta"
+
+      - name: fbaja
+        description: "Fecha de baja"
+
+      - name: genero
+        description: "Género del cliente"
+
+      - name: activo
+        description: "Indicador de cliente activo"
+
+      - name: creado_en
+        description: "Fecha de creación del registro"
+
+      - name: modificado_en
+        description: "Fecha de modificación del registro"
+
+  - name: stg_ejemplares
+    description: "Modelo staging de ejemplares"
+    columns:
+      - name: idlibro
+        tests:
+          - not_null
+
+      - name: nejemplar
+        tests:
+          - not_null
+
+      - name: estado
+
+      - name: fadquisicion
+
+      - name: fultimarev
+
+      - name: ubicacion
+
+      - name: activo
+
+      - name: creado_en
+
+      - name: modificado_en
+
+  - name: stg_ejemplares_para_borrar
+    description: "Modelo staging de ejemplares para borrar"
+    columns:
+      - name: idlibro
+
+      - name: nejemplar
+
+      - name: estado
+
+      - name: motivobaja
+
+      - name: fdeteccion
+
+      - name: aprobado
+
+      - name: creado_en
+
+  - name: stg_libros
+    description: "Modelo staging de libros"
+    columns:
+      - name: idlibro
+        tests:
+          - not_null
+          - unique
+
+      - name: titulo
+
+      - name: autor
+
+      - name: isbn
+
+      - name: genero
+
+      - name: categoria
+
+      - name: editorial
+
+      - name: aniopublic
+
+      - name: numpaginas
+
+      - name: falta
+
+      - name: activo
+
+      - name: creado_en
+
+      - name: modificado_en
+
+  - name: stg_prestamos
+    description: "Modelo staging de préstamos"
+    columns:
+      - name: idcliente
+        tests:
+          - relationships:
+              to: ref('stg_clientes')
+              field: idcliente
+
+      - name: idlibro
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_libros')
+                field: idlibro
+
+      - name: nejemplar
+
+      - name: fentrega
+
+      - name: fdevolucion
+
+      - name: flimite
+
+      - name: renovaciones
+
+      - name: notas
+
+      - name: creado_en
+
+      - name: modificado_en
+
+  - name: stg_reservas
+    description: "Modelo staging de reservas"
+    columns:
+      - name: idreserva
+        tests:
+          - not_null
+          - unique
+
+      - name: idcliente
+        tests:
+          - relationships:
+              to: ref('stg_clientes')
+              field: idcliente
+
+      - name: idlibro
+        tests:
+          - relationships:
+              to: ref('stg_libros')
+              field: idlibro
+
+      - name: freserva
+
+      - name: fexpiracion
+
+      - name: fatencion
+
+      - name: estado
+
+      - name: canal
+
+      - name: notas
+
+      - name: creado_en
+
+      - name: modificado_en
+
+  - name: stg_sanciones
+    description: "Modelo staging de sanciones"
+    columns:
+      - name: idsancion
+        tests:
+          - not_null
+          - unique
+
+      - name: idcliente
+        tests:
+          - relationships:
+              to: ref('stg_clientes')
+              field: idcliente
+
+      - name: idlibro
+        tests:
+          - relationships:
+              to: ref('stg_libros')
+              field: idlibro
+
+      - name: nejemplar
+
+      - name: fentrega
+
+      - name: tiposancion
+
+      - name: descripcion
+
+      - name: importe
+
+      - name: fsancion
+
+      - name: flimitepago
+
+      - name: estado
+
+      - name: fpago
+
+      - name: metodopago

@@ -1,0 +1,180 @@
+version: 2
+
+sources:
+  - name: raw_biblioteca
+    database: BIBLIOTECA_DEV_BRONZE_DB
+    schema: BIBLIOTECA
+
+    tables:
+      - name: clientes
+        columns:
+          - name: idcliente
+            data_type: number
+          - name: nombre
+            data_type: varchar
+          - name: telefono
+            data_type: number
+          - name: email
+            data_type: varchar
+          - name: direccion
+            data_type: varchar
+          - name: ciudad
+            data_type: varchar
+          - name: fnacimiento
+            data_type: date
+          - name: falta
+            data_type: date
+          - name: fbaja
+            data_type: date
+          - name: genero
+            data_type: varchar
+          - name: activo
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+          - name: modificado_en
+            data_type: timestamp_ntz
+
+      - name: ejemplares
+        columns:
+          - name: idlibro
+            data_type: number
+          - name: nejemplar
+            data_type: number
+          - name: estado
+            data_type: varchar
+          - name: fadquisicion
+            data_type: date
+          - name: fultimarev
+            data_type: date
+          - name: ubicacion
+            data_type: varchar
+          - name: activo
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+          - name: modificado_en
+            data_type: timestamp_ntz
+
+      - name: ejemplares_para_borrar
+        columns:
+          - name: idlibro
+            data_type: number
+          - name: nejemplar
+            data_type: number
+          - name: estado
+            data_type: varchar
+          - name: motivobaja
+            data_type: varchar
+          - name: fdeteccion
+            data_type: date
+          - name: aprobado
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+
+      - name: libros
+        columns:
+          - name: idlibro
+            data_type: number
+          - name: titulo
+            data_type: varchar
+          - name: autor
+            data_type: varchar
+          - name: isbn
+            data_type: varchar
+          - name: genero
+            data_type: varchar
+          - name: categoria
+            data_type: varchar
+          - name: editorial
+            data_type: varchar
+          - name: aniopublic
+            data_type: number
+          - name: numpaginas
+            data_type: number
+          - name: falta
+            data_type: date
+          - name: activo
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+          - name: modificado_en
+            data_type: timestamp_ntz
+
+      - name: prestamos
+        columns:
+          - name: idcliente
+            data_type: number
+          - name: idlibro
+            data_type: number
+          - name: nejemplar
+            data_type: number
+          - name: fentrega
+            data_type: date
+          - name: fdevolucion
+            data_type: date
+          - name: flimite
+            data_type: date
+          - name: renovaciones
+            data_type: number
+          - name: notas
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+          - name: modificado_en
+            data_type: timestamp_ntz
+
+      - name: reservas
+        columns:
+          - name: idreserva
+            data_type: number
+          - name: idcliente
+            data_type: number
+          - name: idlibro
+            data_type: number
+          - name: freserva
+            data_type: date
+          - name: fexpiracion
+            data_type: date
+          - name: fatencion
+            data_type: date
+          - name: estado
+            data_type: varchar
+          - name: canal
+            data_type: varchar
+          - name: notas
+            data_type: varchar
+          - name: creado_en
+            data_type: timestamp_ntz
+          - name: modificado_en
+            data_type: timestamp_ntz
+
+      - name: sanciones
+        columns:
+          - name: idsancion
+            data_type: number
+          - name: idcliente
+            data_type: number
+          - name: idlibro
+            data_type: number
+          - name: nejemplar
+            data_type: number
+          - name: fentrega
+            data_type: date
+          - name: tiposancion
+            data_type: varchar
+          - name: descripcion
+            data_type: varchar
+          - name: importe
+            data_type: number
+          - name: fsancion
+            data_type: date
+          - name: flimitepago
+            data_type: date
+          - name: estado
+            data_type: varchar
+          - name: fpago
+            data_type: date
+          - name: metodopago
+            data_type: varchar
