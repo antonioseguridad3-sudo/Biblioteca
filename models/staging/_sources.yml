@@ -5,6 +5,14 @@ sources:
     database: BIBLIOTECA_DEV_BRONZE_DB
     schema: BIBLIOTECA
 
+   # config: 
+   #   freshness:
+   #    warn_after: {count: 1000, period: day}
+   #    error_after: {count: 1500, period: day}
+   #    loaded_at_field: loaded_at  
+          
+        
+
     tables:
       - name: clientes
         columns:

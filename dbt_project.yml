@@ -1,16 +1,10 @@
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'proyecto_biblioteca'
+# dbt_project.yml
+name: 'biblioteca'          # ✅ minúsculas obligatorio
 version: '1.0.0'
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
 profile: 'default'
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -18,34 +12,43 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+target-path: "target"
+clean-targets:
   - "target"
   - "dbt_packages"
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+on-run-start:
+  - "ALTER SESSION SET TIMEZONE = 'Europe/Madrid'"   # ✅ SESSION (faltaba la N)
 
 models:
-  proyecto_biblioteca:
-    # Configuración para la carpeta models/example/
+  biblioteca:                                         # ✅ debe coincidir con name
     example:
       +materialized: table
 
-    # ------------------------------------------------------------------------
-    # STAGING — Capa Silver
-    # ------------------------------------------------------------------------
-    # Materializados como vista (sin coste de almacenamiento, siempre datos
-    # actualizados al consultar). Apuntan a la BD SILVER del entorno actual.
-    # ------------------------------------------------------------------------
     staging:
       +materialized: view
       +database: BIBLIOTECA_DEV_SILVER_DB
       raw_biblioteca:
-        +schema: BIBLIOTECA
+        +schema: STAGING                              # ✅ mayúsculas consistentes
 
     marts:
-      +materialized: incremental
+      +materialized: table                            # ✅ quitado incremental genérico
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE
+        dimensiones:
+          +schema: DIMENSIONES
+          +tags: ["dimension"]                        # ✅ corregido typo "dimensio"
+        hechos:
+          +schema: HECHOS
+          +tags: ["hechos"]                           # ✅ formato consistente con comillas
+
+seeds:
+  biblioteca:                                        # ✅ minúsculas, igual que name
+    +database: BIBLIOTECA_DEV_BRONZE_DB              # ✅ BRONZE (antes tenías BRONCE)
+    +schema: BRONZE
+
+snapshots:
+  biblioteca:                                        # ✅ minúsculas, igual que name
+    +database: BIBLIOTECA_DEV_SILVER_DB
+    +schema: SNAPSHOTS
