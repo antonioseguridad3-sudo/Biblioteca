@@ -41,4 +41,11 @@ models:
     staging:
       +materialized: view
       +database: BIBLIOTECA_DEV_SILVER_DB
-      +schema: BIBLIOTECA
+      raw_biblioteca:
+        +schema: BIBLIOTECA
+
+    marts:
+      +materialized: incremental
+      +database: BIBLIOTECA_DEV_GOLD_DB
+      core:
+        +schema: CORE

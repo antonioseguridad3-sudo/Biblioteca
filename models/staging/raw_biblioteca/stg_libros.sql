@@ -9,15 +9,15 @@ source as (
 renamed as (
 
     select
-        idlibro,
+        idlibro as id_libro,
         titulo,
         autor,
         isbn,
         genero,
         categoria,
         editorial,
-        aniopublic,
-        numpaginas,
+        aniopublic  as anio_publicacion,
+        numpaginas  as num_paginas,
         falta,
         activo,
         creado_en,

@@ -4,7 +4,7 @@ models:
   - name: stg_clientes
     description: "Modelo staging de clientes"
     columns:
-      - name: idcliente
+      - name: id_cliente
         description: "Identificador único del cliente"
         tests:
           - not_null
@@ -52,7 +52,10 @@ models:
       - name: idlibro
         tests:
           - not_null
-
+          - relationships:
+             arguments:
+              to: ref('stg_libros')
+              field: id_libro
       - name: nejemplar
         tests:
           - not_null
@@ -126,8 +129,9 @@ models:
       - name: idcliente
         tests:
           - relationships:
-              to: ref('stg_clientes')
-              field: idcliente
+              arguments:
+                 to: ref('stg_clientes')
+                 field: idcliente
 
       - name: idlibro
         tests:
@@ -163,14 +167,16 @@ models:
       - name: idcliente
         tests:
           - relationships:
-              to: ref('stg_clientes')
-              field: idcliente
+              arguments: 
+                to: ref('stg_clientes')
+                field: idcliente
 
       - name: idlibro
         tests:
           - relationships:
-              to: ref('stg_libros')
-              field: idlibro
+              arguments: 
+               to: ref('stg_libros')
+               field: idlibro
 
       - name: freserva
 
@@ -199,14 +205,16 @@ models:
       - name: idcliente
         tests:
           - relationships:
-              to: ref('stg_clientes')
-              field: idcliente
+              arguments: 
+               to: ref('stg_clientes')
+               field: idcliente
 
       - name: idlibro
         tests:
           - relationships:
-              to: ref('stg_libros')
-              field: idlibro
+              arguments: 
+               to: ref('stg_libros')
+               field: idlibro
 
       - name: nejemplar
 

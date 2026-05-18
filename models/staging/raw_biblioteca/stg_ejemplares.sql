@@ -9,10 +9,10 @@ source as (
 renamed as (
 
     select
-        idlibro,
-        nejemplar,
+        idlibro as id_libro,
+        nejemplar as n_ejemplar,
         estado,
-        fadquisicion,
+        fadquisicion as f_adquisicion,
         fultimarev,
         ubicacion,
         activo,
