@@ -1,0 +1,126 @@
+version: 2
+
+models:
+  - name: dim_clientes
+    description: "Dimensión de clientes de la biblioteca"
+    columns:
+      - name: sk_cliente
+        tests: [not_null, unique]
+      - name: id_cliente
+        tests: [not_null, unique]
+      - name: genero
+        data_tests:
+          - accepted_values:
+             arguments:
+               values: ['M', 'F', 'NB', 'desconocido']
+
+  - name: dim_libros
+    description: "Dimensión del catálogo de libros"
+    columns:
+      - name: sk_libro
+        tests: [not_null, unique]
+      - name: id_libro
+        tests: [not_null, unique]
+
+  - name: dim_ejemplares
+    description: "Dimensión de ejemplares físicos, incluye flag de baja pendiente"
+    columns:
+      - name: sk_ejemplar
+        tests: [not_null, unique]
+      - name: id_libro        
+      - name: estado
+        tests:
+          - accepted_values:
+             arguments:
+               values: ['bueno', 'regular', 'malo']
+      - name: pendiente_baja
+        tests: [not_null]
+
+  - name: dim_fecha
+    description: "Dimensión de calendario generada en dbt (2010 → +2 años)"
+    columns:
+      - name: sk_fecha
+        tests: [not_null, unique]
+      - name: fecha
+        tests: [not_null, unique]
+
+  - name: fact_prestamos
+    description: "Hechos de préstamos con claves subrogadas y métricas de retraso"
+    columns:
+      - name: sk_prestamo
+        tests: [not_null, unique]
+      - name: fk_cliente
+        tests:
+          - not_null
+          - relationships:
+             arguments:
+              to: ref('dim_clientes')
+              field: sk_cliente
+      - name: fk_libro
+        data_tests:
+          
+          - not_null
+          - relationships:
+              arguments: 
+               to: ref('dim_libros')
+               field: sk_libro
+      - name: fk_ejemplar
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+               to: ref('dim_ejemplares')
+               field: sk_ejemplar
+      - name: fk_fecha_entrega
+        tests:
+          - not_null
+          - relationships:
+             arguments:
+               to: ref('dim_fecha')
+               field: sk_fecha
+
+  - name: fact_reservas
+    description: "Hechos de reservas"
+    columns:
+      - name: sk_reserva
+        tests: [not_null, unique]
+      - name: fk_cliente
+        tests:
+          - not_null
+          - relationships:
+              arguments: 
+               to: ref('dim_clientes')
+               field: sk_cliente
+      - name: estado
+        tests:
+          - accepted_values:
+             arguments:
+              values: ['pendiente', 'confirmada', 'atendida', 'expirada', 'cancelada']
+      - name: canal
+        tests:
+          - accepted_values:
+              arguments:
+               values: ['web', 'app', 'presencial', 'telefono']
+
+  - name: fact_sanciones
+    description: "Hechos de sanciones con importe y estado de pago"
+    columns:
+      - name: sk_sancion
+        tests: [not_null, unique]
+      - name: fk_cliente
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+               to: ref('dim_clientes')
+               field: sk_cliente
+      - name: tipo_sancion
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['devolucion_tarde', 'dano_leve', 'dano_grave', 'perdida', 'suciedad']
+      - name: estado
+        tests:
+          - accepted_values:
+             arguments:
+               values: ['pendiente', 'pagada', 'dispensada', 'en_disputa']
