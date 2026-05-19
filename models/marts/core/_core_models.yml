@@ -1,0 +1,179 @@
+version: 2
+
+models:
+
+  # ============================================================
+  # DIMENSIONES
+  # ============================================================
+  - name: dim_clientes
+    description: "Dimensión de clientes de la biblioteca con atributos enriquecidos"
+    columns:
+      - name: id_cliente
+        description: "Identificador único del cliente (PK)"
+        data_tests:
+          - not_null
+          - unique
+      - name: nombre
+        description: "Nombre completo del cliente"
+      - name: edad
+        description: "Edad calculada a partir de la fecha de nacimiento"
+      - name: rango_edad
+        description: "Segmentación etaria: Menor / Joven / Adulto / Senior"
+      - name: es_activo
+        description: "Indicador booleano de cliente activo"
+      - name: antiguedad_dias
+        description: "Días transcurridos desde el alta del cliente"
+
+  - name: dim_libros
+    description: "Dimensión de libros del catálogo"
+    columns:
+      - name: id_libro
+        description: "Identificador único del libro (PK)"
+        data_tests:
+          - not_null
+          - unique
+      - name: titulo
+      - name: autor
+      - name: isbn
+      - name: longitud_libro
+        description: "Clasificación por número de páginas: Corto / Medio / Largo"
+      - name: es_activo
+
+  - name: dim_ejemplares
+    description: "Dimensión de ejemplares físicos. Clave natural compuesta (id_libro, n_ejemplar). Enriquecida con datos de bajas pendientes."
+    columns:
+      - name: sk_ejemplar
+        description: "Surrogate key del ejemplar"
+        data_tests:
+          - not_null
+          - unique
+      - name: id_libro
+        description: "FK a dim_libros"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_libros')
+                field: id_libro
+      - name: n_ejemplar
+        data_tests:
+          - not_null
+      - name: marcado_para_baja
+        description: "True si el ejemplar aparece en la tabla de bajas"
+
+  - name: dim_fecha
+    description: "Dimensión calendario para análisis temporal (2015-2034)"
+    columns:
+      - name: id_fecha
+        description: "Clave en formato YYYYMMDD"
+        data_tests:
+          - not_null
+          - unique
+      - name: fecha
+        data_tests:
+          - not_null
+          - unique
+      - name: anio
+      - name: trimestre
+      - name: mes
+      - name: es_fin_de_semana
+
+  # ============================================================
+  # HECHOS
+  # ============================================================
+  - name: fct_prestamos
+    description: "Tabla de hechos de préstamos. Grano: un préstamo por cliente / ejemplar / fecha de entrega."
+    columns:
+      - name: sk_prestamo
+        description: "Surrogate key del préstamo"
+        data_tests:
+          - not_null
+          - unique
+      - name: id_cliente
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: id_cliente
+      - name: id_libro
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_libros')
+                field: id_libro
+      - name: sk_ejemplar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_ejemplares')
+                field: sk_ejemplar
+      - name: id_fecha_entrega
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_fecha')
+                field: id_fecha
+      - name: dias_prestamo
+        description: "Días entre entrega y devolución (o fecha actual si abierto)"
+      - name: dias_retraso
+        description: "Días de retraso respecto al límite (negativo si devuelto antes)"
+      - name: es_retraso
+      - name: prestamo_abierto
+        description: "True si aún no se ha devuelto"
+
+  - name: fct_reservas
+    description: "Tabla de hechos de reservas. Grano: una reserva."
+    columns:
+      - name: id_reserva
+        data_tests:
+          - not_null
+          - unique
+      - name: id_cliente
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: id_cliente
+      - name: id_libro
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_libros')
+                field: id_libro
+      - name: id_fecha_reserva
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_fecha')
+                field: id_fecha
+      - name: fue_atendida
+      - name: esta_expirada
+
+  - name: fct_sanciones
+    description: "Tabla de hechos de sanciones. Grano: una sanción."
+    columns:
+      - name: id_sancion
+        data_tests:
+          - not_null
+          - unique
+      - name: id_cliente
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: id_cliente
+      - name: id_libro
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_libros')
+                field: id_libro
+      - name: importe
+        data_tests:
+          - not_null
+      - name: importe_cobrado
+        description: "Importe efectivamente cobrado (0 si pendiente)"
+      - name: importe_pendiente
+        description: "Importe pendiente de cobro (0 si pagado)"
+      - name: sancion_pendiente
+      - name: pago_fuera_plazo
