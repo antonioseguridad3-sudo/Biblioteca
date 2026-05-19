@@ -1,5 +1,4 @@
-# dbt_project.yml
-name: 'biblioteca'          # ✅ minúsculas obligatorio
+name: 'biblioteca'
 version: '1.0.0'
 config-version: 2
 
@@ -18,10 +17,10 @@ clean-targets:
   - "dbt_packages"
 
 on-run-start:
-  - "ALTER SESSION SET TIMEZONE = 'Europe/Madrid'"   # ✅ SESSION (faltaba la N)
+  - "ALTER SESSION SET TIMEZONE = 'Europe/Madrid'"
 
 models:
-  biblioteca:                                         # ✅ debe coincidir con name
+  biblioteca:
     example:
       +materialized: table
 
@@ -29,26 +28,26 @@ models:
       +materialized: view
       +database: BIBLIOTECA_DEV_SILVER_DB
       raw_biblioteca:
-        +schema: STAGING                              # ✅ mayúsculas consistentes
+        +schema: STAGING                         
 
     marts:
-      +materialized: table                            # ✅ quitado incremental genérico
+      +materialized: table                         
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE
         dimensiones:
           +schema: DIMENSIONES
-          +tags: ["dimension"]                        # ✅ corregido typo "dimensio"
+          +tags: ["dimension"]                       
         hechos:
           +schema: HECHOS
-          +tags: ["hechos"]                           # ✅ formato consistente con comillas
+          +tags: ["hechos"]
 
 seeds:
-  biblioteca:                                        # ✅ minúsculas, igual que name
-    +database: BIBLIOTECA_DEV_BRONZE_DB              # ✅ BRONZE (antes tenías BRONCE)
+  biblioteca:                                        
+    +database: BIBLIOTECA_DEV_BRONZE_DB              
     +schema: BRONZE
 
 snapshots:
-  biblioteca:                                        # ✅ minúsculas, igual que name
+  biblioteca:
     +database: BIBLIOTECA_DEV_SILVER_DB
     +schema: SNAPSHOTS
