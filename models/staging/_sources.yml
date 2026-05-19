@@ -18,6 +18,9 @@ sources:
         columns:
           - name: idcliente
             data_type: number
+            tests:
+              - not_null
+              - unique
           - name: nombre
             data_type: varchar
           - name: telefono

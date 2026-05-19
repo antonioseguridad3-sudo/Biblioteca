@@ -31,7 +31,7 @@ models:
         +schema: STAGING                         
 
     marts:
-      +materialized: table                         
+      +materialized: incremental
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE
@@ -43,9 +43,14 @@ models:
           +tags: ["hechos"]
 
 seeds:
-  biblioteca:                                        
-    +database: BIBLIOTECA_DEV_BRONZE_DB              
+  biblioteca:
+    +database: BIBLIOTECA_DEV_BRONZE_DB
     +schema: BRONZE
+    tipos_sancion:
+      +column_types:
+        codigo_tipo: varchar(20)
+        descripcion: varchar(200)
+        dias_bloqueo: number(3,0)
 
 snapshots:
   biblioteca:

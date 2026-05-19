@@ -1,0 +1,5 @@
+codigo_tipo,descripcion,dias_bloqueo
+RETRASO,Devolución fuera de plazo,7
+DANO_LEVE,Daño leve al ejemplar,15
+DANO_GRAVE,Daño grave al ejemplar,60
+PERDIDA,Pérdida del ejemplar,90

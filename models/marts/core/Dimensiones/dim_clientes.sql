@@ -1,15 +1,16 @@
 {{
     config(
-        materialized='table',
-        schema='DIMENSIONES',
-        tags=['dimension']
+        materialized='incremental',
+        unique_key='idcliente'
     )
 }}
 
 with stg as (
-
-    select * from {{ ref('stg_clientes') }}
-
+    select *
+    from {{ ref('stg_clientes') }}
+    {% if is_incremental() %}
+    where f_carga > (select max(f_carga) from {{ this }})
+    {% endif %}
 ),
 
 final as (
@@ -23,12 +24,12 @@ final as (
         ciudad,
         f_nacimiento,
         f_alta,
-        fbaja                                       as f_baja,
+        f_baja,
         genero,
         case
             when upper(activo) in ('S', 'SI', 'Y', 'YES', 'TRUE', '1') then true
             else false
-        end                                         as es_activo,
+        end as es_activo,
         datediff('year', f_nacimiento, current_date) as edad,
         case
             when datediff('year', f_nacimiento, current_date) < 18 then 'Menor'
@@ -36,13 +37,14 @@ final as (
             when datediff('year', f_nacimiento, current_date) between 31 and 60 then 'Adulto'
             when datediff('year', f_nacimiento, current_date) > 60 then 'Senior'
             else 'Desconocido'
-        end                                         as rango_edad,
-        datediff('day', f_alta, current_date)       as antiguedad_dias,
+        end as rango_edad,
+        datediff('day', f_alta, current_date) as antiguedad_dias,
         creado_en,
         modificado_en,
-        current_timestamp()                         as fecha_carga_dim
+        f_carga
     from stg
 
 )
 
-select * from final
+select *
+from final
