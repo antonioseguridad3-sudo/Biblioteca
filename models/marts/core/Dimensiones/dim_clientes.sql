@@ -1,15 +1,24 @@
 {{
     config(
         materialized='incremental',
-        unique_key='idcliente'
+        unique_key='id_cliente'
     )
 }}
 
-with stg as (
-    select *
-    from {{ ref('stg_clientes') }}
+with
+
+{% if is_incremental() %}
+max_carga as (
+    select max(f_carga) as max_f_carga from {{ this }}
+),
+{% endif %}
+
+stg as (
+    select s.*
+    from {{ ref('stg_clientes') }} s
     {% if is_incremental() %}
-    where f_carga > (select max(f_carga) from {{ this }})
+    cross join max_carga m
+    where s.f_carga > m.max_f_carga
     {% endif %}
 ),
 
@@ -46,5 +55,4 @@ final as (
 
 )
 
-select *
-from final
+select * from final

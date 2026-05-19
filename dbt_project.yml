@@ -35,9 +35,9 @@ models:
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE
-        dimensiones:
-          +schema: DIMENSIONES
-          +tags: ["dimension"]                       
+      dimensiones:
+        +schema: DIMENSIONES
+        +tags: ["dimension"]                       
         hechos:
           +schema: HECHOS
           +tags: ["hechos"]
