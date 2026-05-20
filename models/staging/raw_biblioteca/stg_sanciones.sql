@@ -27,7 +27,7 @@ renamed as (
         modificado_en
 
     from source
-
+    where idsancion is not null
 )
 
 select * from renamed

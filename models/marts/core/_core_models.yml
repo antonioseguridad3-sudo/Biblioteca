@@ -81,7 +81,7 @@ models:
   # ============================================================
   # HECHOS
   # ============================================================
-  - name: fct_prestamos
+  - name: fact_prestamos
     description: "Tabla de hechos de préstamos. Grano: un préstamo por cliente / ejemplar / fecha de entrega."
     columns:
       - name: sk_prestamo
@@ -121,7 +121,7 @@ models:
       - name: prestamo_abierto
         description: "True si aún no se ha devuelto"
 
-  - name: fct_reservas
+  - name: fact_reservas
     description: "Tabla de hechos de reservas. Grano: una reserva."
     columns:
       - name: id_reserva
@@ -149,7 +149,7 @@ models:
       - name: fue_atendida
       - name: esta_expirada
 
-  - name: fct_sanciones
+  - name: fact_sanciones
     description: "Tabla de hechos de sanciones. Grano: una sanción."
     columns:
       - name: id_sancion

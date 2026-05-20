@@ -18,6 +18,7 @@ renamed as (
         creado_en
 
     from source
+    where idlibro is not null
 
 )
 
