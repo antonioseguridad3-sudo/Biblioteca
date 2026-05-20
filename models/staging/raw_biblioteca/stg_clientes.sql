@@ -15,14 +15,16 @@ renamed as (
         email,
         direccion,
         ciudad,
-        fnacimiento as F_NACIMIENTO,
-        falta as F_ALTA,
-        fbaja,
+        fnacimiento as f_nacimiento,
+        falta as f_alta,
+        fbaja as f_baja,
         genero,
         activo,
         creado_en,
-        modificado_en
+        modificado_en,
+        fcarga as f_carga
     from source
+    where idcliente is not null
 )
 
 select * from renamed
