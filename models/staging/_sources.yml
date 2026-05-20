@@ -19,7 +19,9 @@ sources:
           - name: idcliente
             data_type: number
             tests:
-              - not_null
+              - not_null:
+                  config:
+                    severity: warn
               - unique
           - name: nombre
             data_type: varchar

@@ -39,12 +39,12 @@ final as (
         aprobado_por,
 
         -- métricas
-        importe,
+        coalesce(importe, 0)                             as importe,
         case
-            when fpago is not null then importe else 0
+            when fpago is not null then coalesce(importe, 0) else 0
         end                                              as importe_cobrado,
         case
-            when fpago is null then importe else 0
+            when fpago is null then coalesce(importe, 0) else 0
         end                                              as importe_pendiente,
         case
             when fpago is not null then datediff('day', fsancion, fpago)

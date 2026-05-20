@@ -31,7 +31,7 @@ models:
         +schema: STAGING                         
 
     marts:
-      +materialized: incremental
+      +materialized: table
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE

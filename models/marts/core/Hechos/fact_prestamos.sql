@@ -9,6 +9,9 @@
 with stg as (
 
     select * from {{ ref('stg_prestamos') }}
+    where idcliente is not null
+      and idlibro   is not null
+      and nejemplar is not null
 
 ),
 
