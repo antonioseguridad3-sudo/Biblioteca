@@ -1,25 +1,29 @@
 {{
     config(
         materialized='incremental',
-        unique_key='id_cliente'
+        unique_key='id_cliente',
+        incremental_strategy='merge'
     )
 }}
 
-with
-
-{% if is_incremental() %}
-max_carga as (
-    select max(f_carga) as max_f_carga from {{ this }}
-),
-{% endif %}
-
-stg as (
-    select s.*
-    from {{ ref('stg_clientes') }} s
+with stg as (
+    select *
+    from {{ ref('stg_clientes') }}
     {% if is_incremental() %}
-    cross join max_carga m
-    where s.f_carga > m.max_f_carga
+    where modificado_en > (
+        select coalesce(max(modificado_en), '1900-01-01'::timestamp_ntz)
+        from {{ this }}
+    )
     {% endif %}
+),
+
+dedup as (
+    select *
+    from stg
+    qualify row_number() over (
+        partition by id_cliente
+        order by modificado_en desc
+    ) = 1
 ),
 
 final as (
@@ -36,7 +40,7 @@ final as (
         f_baja,
         genero,
         case
-            when upper(activo) in ('S', 'SI', 'Y', 'YES', 'TRUE', '1') then true
+            when upper(activo) in ('S','SI','Y','YES','TRUE','1') then true
             else false
         end as es_activo,
         datediff('year', f_nacimiento, current_date) as edad,
@@ -49,9 +53,8 @@ final as (
         end as rango_edad,
         datediff('day', f_alta, current_date) as antiguedad_dias,
         creado_en,
-        modificado_en,
-        f_carga
-    from stg
+        modificado_en
+    from dedup
 
 )
 

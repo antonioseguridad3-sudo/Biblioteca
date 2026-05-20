@@ -1,9 +1,9 @@
-with 
+with
 
 source as (
-    
+
     select * from {{ source('raw_biblioteca', 'clientes') }}
-    
+
 ),
 
 renamed as (
@@ -21,10 +21,10 @@ renamed as (
         genero,
         activo,
         creado_en,
-        modificado_en,
-        fcarga as f_carga
+        modificado_en
     from source
     where idcliente is not null
+
 )
 
 select * from renamed
