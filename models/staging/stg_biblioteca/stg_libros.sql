@@ -21,7 +21,7 @@ renamed as (
         falta,
         activo,
         creado_en,
-        modificado_en
+        coalesce(modificado_en, creado_en) as modificado_en
 
     from source
 

@@ -21,7 +21,8 @@ renamed as (
         genero,
         activo,
         creado_en,
-        modificado_en
+        coalesce(modificado_en, creado_en) as modificado_en,
+        fcarga as f_carga
     from source
     where idcliente is not null
 
