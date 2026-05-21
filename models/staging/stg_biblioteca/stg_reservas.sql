@@ -17,9 +17,9 @@ renamed as (
         fatencion,
         estado,
         canal,
-        notas,
+        coalesce(notas, 'Sin notas')        as notas,
         creado_en,
-        modificado_en
+        coalesce(modificado_en, creado_en)  as modificado_en
 
     from source
 

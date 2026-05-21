@@ -47,32 +47,57 @@ models:
         description: "Fecha de modificación del registro"
 
   - name: stg_ejemplares
-    description: "Modelo staging de ejemplares"
+    description: >
+      Modelo staging de ejemplares físicos. Unifica la tabla de ejemplares con
+      la de ejemplares marcados para baja (ejemplares_para_borrar) mediante left
+      join por la clave natural compuesta (id_libro, n_ejemplar). Cada ejemplar
+      se enriquece con su motivo de baja, fecha de detección y estado de aprobación.
     columns:
       - name: id_libro
+        description: "Identificador del libro. Clave natural compuesta junto a n_ejemplar."
         tests:
           - not_null
           - relationships:
-             arguments:
-              to: ref('stg_libros')
-              field: id_libro
+              arguments:
+                to: ref('stg_libros')
+                field: id_libro
       - name: n_ejemplar
+        description: "Número de ejemplar dentro del libro. Clave natural compuesta junto a id_libro."
         tests:
           - not_null
 
       - name: estado
+        description: "Estado físico del ejemplar."
 
-      - name: fadquisicion
+      - name: f_adquisicion
+        description: "Fecha de adquisición del ejemplar."
 
-      - name: fultimarev
+      - name: f_ultima_revision
+        description: "Fecha de la última revisión del ejemplar."
 
       - name: ubicacion
+        description: "Ubicación física del ejemplar en la biblioteca."
 
       - name: activo
+        description: "Indicador de ejemplar activo (valor original sin normalizar)."
+
+      - name: marcado_para_baja
+        description: "True si el ejemplar aparece en ejemplares_para_borrar."
+
+      - name: motivo_baja
+        description: "Motivo de la baja (deterioro, pérdida, etc.). Null si no está marcado para baja."
+
+      - name: f_deteccion_baja
+        description: "Fecha en la que se detectó o registró la baja. Null si no aplica."
+
+      - name: baja_aprobada
+        description: "Indicador de si la baja ha sido aprobada. Null si no aplica."
 
       - name: creado_en
+        description: "Fecha de creación del registro en origen."
 
       - name: modificado_en
+        description: "Fecha de modificación del registro en origen."
 
   - name: stg_ejemplares_para_borrar
     description: >

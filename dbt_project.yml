@@ -20,25 +20,25 @@ on-run-start:
   - "ALTER SESSION SET TIMEZONE = 'Europe/Madrid'"
 
 models:
-  biblioteca:
+ biblioteca:
     example:
       +materialized: table
 
     staging:
       +materialized: view
       +database: BIBLIOTECA_DEV_SILVER_DB
-      raw_biblioteca:
-        +schema: STAGING                         
+      +schema: STAGING                        
 
     marts:
-      +materialized: table
       +database: BIBLIOTECA_DEV_GOLD_DB
       core:
         +schema: CORE
-      dimensiones:
-        +schema: DIMENSIONES
-        +tags: ["dimension"]                       
+        dimensiones:
+          +materialized: table
+          +schema: DIMENSIONES
+          +tags: ["dimension"]
         hechos:
+          +materialized: incremental
           +schema: HECHOS
           +tags: ["hechos"]
 
