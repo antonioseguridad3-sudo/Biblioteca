@@ -99,37 +99,6 @@ models:
       - name: modificado_en
         description: "Fecha de modificación del registro en origen."
 
-  - name: stg_ejemplares_para_borrar
-    description: >
-      Modelo staging de ejemplares marcados para baja. Registra las bajas
-      detectadas o pendientes de aprobación. Sirve para enriquecer
-      dim_ejemplares con el indicador marcado_para_baja y el motivo de baja.
-    columns:
-      - name: idlibro
-        description: "Identificador del libro al que pertenece el ejemplar. Clave natural compuesta junto a nejemplar."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_libros')
-                field: id_libro
-              config:
-                severity: warn
-      - name: nejemplar
-        description: "Número de ejemplar dentro del libro. Clave natural compuesta junto a idlibro."
-        data_tests:
-          - not_null
-      - name: estado
-        description: "Estado físico del ejemplar en el momento de la detección de la baja."
-      - name: motivobaja
-        description: "Motivo por el que el ejemplar se ha marcado para baja (deterioro, pérdida, etc.)."
-      - name: fdeteccion
-        description: "Fecha en la que se detectó o registró la baja."
-      - name: aprobado
-        description: "Indicador de si la baja ha sido aprobada."
-      - name: creado_en
-        description: "Fecha de creación del registro en origen."
-
   - name: stg_libros
     description: "Modelo staging de libros"
     columns:

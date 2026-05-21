@@ -1,9 +1,9 @@
-with
+with 
 
 source as (
-
+    
     select * from {{ source('raw_biblioteca', 'clientes') }}
-
+    
 ),
 
 renamed as (
@@ -21,10 +21,14 @@ renamed as (
         genero,
         activo,
         creado_en,
-        coalesce(modificado_en, creado_en) as modificado_en,
+        modificado_en,
         fcarga as f_carga
     from source
     where idcliente is not null
+    qualify row_number() over (
+        partition by idcliente
+        order by modificado_en desc nulls last
+    ) = 1
 
 )
 
